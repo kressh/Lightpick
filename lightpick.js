@@ -274,9 +274,14 @@
 
             if (idx === date.toDate().getMonth()) {
                 option.setAttribute('selected', 'selected');
+                if (!opts.dropdowns || !opts.dropdowns.months) {
+                    select.appendChild(option);
+                }
             }
 
-            select.appendChild(option);
+            if (opts.dropdowns || opts.dropdowns.months) {
+                select.appendChild(option);
+            }
         }
 
         select.className = 'lightpick__select lightpick__select-months';
@@ -866,7 +871,7 @@
 
             opts.field = (opts.field && opts.field.nodeName) ? opts.field : null;
 
-            opts.calendar = [moment().set('date', 1)];
+            opts.calendar = [moment(opts.calendarStartDate).set('date', 1)];
 
             if (opts.numberOfMonths === 1 && opts.numberOfColumns > 1) {
                 opts.numberOfColumns = 1;
@@ -896,11 +901,6 @@
 
             if (Object.prototype.toString.call(options.locale) === '[object Object]') {
                 opts.locale = Object.assign({}, defaults.locale, options.locale);
-            }
-
-            if (window.innerWidth < 480 && opts.numberOfMonths > 1) {
-                opts.numberOfMonths = 1;
-                opts.numberOfColumns = 1;
             }
 
             if (opts.repick && !opts.secondField) {
@@ -967,9 +967,7 @@
                 date = moment();
             }
 
-            date.set('date', 1);
-
-            this._opts.calendar = [moment(date)];
+            this._opts.calendar = [moment(this._opts.calendarStartDate || date).set('date', 1)];
 
             renderCalendar(this.el, this._opts);
         },
